@@ -1,0 +1,4 @@
+swiftmailer:
+    url: '%env(MAILER_URL)%'
+    # url: 'contact@myquiz.com'
+    spool: { type: 'memory' }
