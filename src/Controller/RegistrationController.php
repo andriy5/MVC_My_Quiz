@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
-require_once '/home/andriy/Code/MVC_My_Quiz/vendor/autoload.php';
+// require_once '/home/andriy/Code/MVC_My_Quiz/vendor/autoload.php';
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use DateTime;
+use Doctrine\DBAL\Schema\View;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +31,8 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        // dump($_REQUEST). die;
+        
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -41,18 +46,23 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-
             // Send an email
-            $email = (new Email())
+            $key = sha1($user->getEmail());
+            $linkActivation = "http://localhost:8000/activate/{$user->getId()}/$key";
+
+            $email = (new TemplatedEmail())
                 ->from('hello@example.com')
-                ->to('you@example.com')
+                ->to($user->getEmail())
                 //->cc('cc@example.com')
                 //->bcc('bcc@example.com')
                 //->replyTo('fabien@example.com')
                 //->priority(Email::PRIORITY_HIGH)
-                ->subject('Time for Symfony Mailer!')
-                ->text('Sending emails is fun again!')
-                ->html('<p>See Twig integration for better HTML integration!</p>');
+                ->subject('Vous êtes inscrits sur My Quiz')
+                ->htmlTemplate('email/verify.html.twig')
+                ->context([
+                    'linkActivation' => $linkActivation
+                ])
+                ;
 
             $mailer->send($email);
 
@@ -62,5 +72,45 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/activate/{id}/{key}")
+     */
+    public function activate($id, $key)
+    {
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($id);
+
+        $checkKey = sha1($user->getEmail());
+            
+        if ($checkKey === $key) {
+        
+            
+            // Checker si activation deja faite
+            if ($user->getVerifiedAt() == null) {
+
+                // sinon Rajouter value dans DB "verified"
+                $user->setVerifiedAt(New DateTime());
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                // Faire page correspondant
+                return $this->redirectToRoute('home');
+
+            }  else {
+
+                // si oui msg->deja activer
+                // Faire page correspondant
+                return $this->redirectToRoute('home');
+            }
+            
+        }
+        else {
+            // echo "pas correct";
+        }            
     }
 }

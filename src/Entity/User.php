@@ -35,6 +35,11 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $verified_at;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -111,5 +116,17 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getVerifiedAt(): ?\DateTimeInterface
+    {
+        return $this->verified_at;
+    }
+
+    public function setVerifiedAt(?\DateTimeInterface $verified_at): self
+    {
+        $this->verified_at = $verified_at;
+
+        return $this;
     }
 }
