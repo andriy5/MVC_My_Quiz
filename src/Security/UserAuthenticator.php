@@ -56,7 +56,7 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
             Security::LAST_USERNAME,
             $credentials['email']
         );
-
+        
         return $credentials;
     }
 
@@ -79,7 +79,16 @@ class UserAuthenticator extends AbstractFormLoginAuthenticator implements Passwo
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if ($user->getVerifiedAt()) {
+            return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        }
+        else {
+            return false;
+        }
+        // dump($user->getVerifiedAt()). die;
+
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+
     }
 
     /**
