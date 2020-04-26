@@ -129,4 +129,11 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function eraseVerifiedAt(): self
+    {
+        $this->verified_at = null;
+
+        return $this;
+    }
 }

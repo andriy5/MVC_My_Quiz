@@ -3,13 +3,11 @@
 {% block title %}Home | My Quiz{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
+    <h1>Categories</h1>
     <ul>
-        <li><a href="#">Foot</a></li>
-        <li><a href="#">Sante</a></li>
-        <li><a href="#">Blabla</a></li>
-        <li><a href="#">Blabla</a></li>
-        <li><a href="#">Blabla</a></li>
+    {% for category in categories %}
+        <li><a href="#">{{category.name}}</a></li>
+    {% endfor %}
     </ul>
 
 {% endblock %}

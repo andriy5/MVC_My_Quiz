@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
             <a class="navbar-brand" href="{{url('home')}}">My Quiz</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -33,8 +33,8 @@
                             {{app.user.email}}
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="" type="button">Action</a>
-                            <a class="dropdown-item" href="#" type="button">Another action</a>
+                            <a class="dropdown-item" href="{{url('profile_show')}}" type="button">My Profile</a>
+                            <a class="dropdown-item" href="{{url('profile_edit')}}" type="button">Edit</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{url('app_logout')}}" type="button">Log Out</a>
                         </div>
@@ -58,6 +58,11 @@
 
 
         <div class="container">
+            {% for message in app.flashes('notice') %}
+                <div class="flash-notice alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
             {% block body %}{% endblock %}
             {% block javascripts %}{% endblock %}
             <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
