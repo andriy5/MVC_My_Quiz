@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GameController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <p class="text-secondary">{{ categorie.name }}</p>
+    <h1>{{ question.question }}</h1>
+    <br>
+    {% for answer in answers %}
+        <ul>
+            <li><a href="#" class="text-dark"> {{ answer.reponse }} 
+            {% if answer.reponseExpected == true %}
+                (✔)
+            {% endif %} </a></li>
+        </ul>
+    {% endfor %}
+</div>
+<button type="button" class="btn btn-success float-right">Submit Answer</button>
+{% endblock %}

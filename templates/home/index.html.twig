@@ -6,7 +6,7 @@
     <h1>Categories</h1>
     <ul>
     {% for category in categories %}
-        <li><a href="#">{{category.name}}</a></li>
+        <li><a class="text-dark" href="/game/{{category.id}}">{{category.name}}</a></li>
     {% endfor %}
     </ul>
 
