@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GameController!{% endblock %}
+{% block title %}Quiz {{ categorie.name }}{% endblock %}
 
 {% block body %}
 <style>
@@ -12,14 +12,15 @@
     <p class="text-secondary">{{ categorie.name }}</p>
     <h1>{{ question.question }}</h1>
     <br>
-    {% for answer in answers %}
-        <ul>
-            <li><a href="#" class="text-dark"> {{ answer.reponse }} 
-            {% if answer.reponseExpected == true %}
-                (✔)
-            {% endif %} </a></li>
-        </ul>
+    
+    {% for i in 0..2 %}
+        {% if i == 0 %}
+            <input type="radio" name="answer" id="{{ i }}" checked> <label for="{{ i }}" >{{ answers[i].reponse }}</label><br>
+        {% else %}
+            <input type="radio" name="answer" id="{{ i }}"> <label for="{{ i }}" >{{ answers[i].reponse }}</label><br>
+        {% endif %}
     {% endfor %}
+
+    <a type="button" class="btn btn-success float-right" href="">Submit Answer</a>
 </div>
-<button type="button" class="btn btn-success float-right">Submit Answer</button>
 {% endblock %}

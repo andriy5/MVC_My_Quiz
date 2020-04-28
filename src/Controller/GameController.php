@@ -12,11 +12,46 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-// ROUTE GENERAL avec cat_id
+/**
+ * @Route("/game", name="game")
+*/
 class GameController extends AbstractController
 {
+    public function _construct() {
+
+    }
+
     /**
-     * @Route("/game/{cat_id}/{quest_id}", name="game")
+     * @Route("/{cat_id}", name="_cat")
+     */
+    public function category($cat_id)
+    {
+
+        // Retrieve categorie
+        $repository = $this->getDoctrine()->getRepository(Categorie::class);
+        $categorie = $repository->findOneBy([
+            'id' => $cat_id
+        ]);
+
+        // TODO: Retrieve questions id, store those id.s somewhere
+            // Retrieve questions
+        $repository = $this->getDoctrine()->getRepository(Question::class);
+        $questions = $repository->findBy([
+            'idCategorie' => $cat_id
+        ]);
+        // dd($questions[1]->getId());
+
+
+        
+        // TODO#2: Redirect to question method with those id stored
+        return $this->redirectToRoute('game_quest', [
+            'cat_id' => $cat_id,
+            'quest_id' => $questions[0]->getId()
+        ]);
+    }
+    
+    /**
+     * @Route("/{cat_id}/{quest_id}", name="_quest")
      */
     public function question($cat_id, $quest_id, Request $request)
     {
