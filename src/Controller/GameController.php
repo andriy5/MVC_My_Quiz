@@ -22,9 +22,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class GameController extends AbstractController
 {
     /**
-     * @Route("/{cat_id}", name="_cat")
+     * @Route("/{cat_id}", name="_new")
      */
-    public function category($cat_id)
+    public function newGame($cat_id)
     {
 
         // Retrieve categorie
@@ -33,20 +33,30 @@ class GameController extends AbstractController
             'id' => $cat_id
         ]);
 
-        // TODO: Retrieve questions id, store those id.s somewhere
-            // Retrieve questions
+        // Retrieve questions
         $repository = $this->getDoctrine()->getRepository(Question::class);
         $questions = $repository->findBy([
             'idCategorie' => $cat_id
         ]);
-        // dd($questions[1]->getId());
 
+        $queue_questions = [];
+        foreach ($questions as $key => $question) {
+            array_push($queue_questions, $question->getId());
 
-        
-        // TODO#2: Redirect to question method with those id stored
+        }
+        shuffle($queue_questions);
+        // dump($queue_questions);
+        // dd(json_encode($queue_questions));
+       
+        // Set cookie o the queue
+        $response = new Response();     
+        $cookie = new Cookie("queue", json_encode($queue_questions));
+        $response->headers->setCookie($cookie);
+        $response->send();
+
         return $this->redirectToRoute('game_quest', [
             'cat_id' => $cat_id,
-            'quest_id' => $questions[0]->getId()
+            'quest_id' => $queue_questions[0]
         ]);
     }
     
@@ -98,7 +108,7 @@ class GameController extends AbstractController
             $data = $form->getData();
             $temp_id = $request->cookies->get('temp_id');
 
-            // dd($this->getUser()->getId());
+            // Set all data
             if ($this->getUser()) {
                 $answer->setUserId($this->getUser()->getId());
             }
@@ -126,10 +136,7 @@ class GameController extends AbstractController
             ]);
             $answer->setAnswer($answer_given->getReponseExpected());
 
-            
 
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($answer);
             $entityManager->flush();
@@ -140,8 +147,30 @@ class GameController extends AbstractController
             // else {
             //     $this->addFlash('notice', 'Aïe...');
             // }
-    
-            return $this->redirectToRoute('home');
+
+            // Next question
+            $queue_questions = json_decode($request->cookies->get('queue'));
+            // dd($queue_questions);
+            array_shift($queue_questions);
+            $response = new Response();     
+            $cookie = new Cookie("queue", json_encode($queue_questions));
+            $response->headers->setCookie($cookie);
+            $response->send();
+            
+            if (empty($queue_questions)){
+                $response->headers->clearCookie('queue');
+                $response->send();
+                // TODO Template Finish
+                echo "FINISH";
+            }
+            else {
+                return $this->redirectToRoute('game_quest', [
+                    'cat_id' => $cat_id,
+                    'quest_id' => $queue_questions[0]
+                ]);
+            }
+
+
         }
 
 
@@ -152,4 +181,5 @@ class GameController extends AbstractController
             'answers' => $answers
         ]);
     }
+
 }
