@@ -23,16 +23,6 @@
 
     <a type="button" class="btn btn-success float-right" href="">Submit Answer</a> #}
 
-    <p class="text-secondary">{{ categorie.name }}</p>
-    <h1>{{ question.question }}</h1>
-    <br>
-
     {{ form(form) }}
-    {% for message in app.flashes('notice') %}
-        <div class="flash-notice">
-            {{ message }}
-        </div>
-    {% endfor %}
-    
 </div>
 {% endblock %}
