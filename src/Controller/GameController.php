@@ -22,6 +22,46 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class GameController extends AbstractController
 {
     /**
+     * @Route("/end", name="_end")
+     */
+    public function end(Request $request) {
+        $biggame_id = $request->cookies->get('biggame_id');
+        if ($biggame_id) {
+            $repository = $this->getDoctrine()->getRepository(Game::class);
+            $goodanswers = $repository->findBy([
+                'answer' => 1,
+                'biggame_id' => $request->cookies->get('biggame_id')
+            ]);
+            $results = count($goodanswers);
+    
+            $answers = $repository->findBy([
+                'biggame_id' => $request->cookies->get('biggame_id')
+            ]);
+            // dd($answers);
+            return $this->render('game/end.html.twig', [
+                'results' => $results,
+                'answers' => $answers
+            ]);
+        }
+        else {
+           return $this->redirectToRoute('home'); 
+        }
+    }
+
+    /**
+     * @Route("/history", name="_history")
+     */
+    public function history(Request $request)
+    {
+        $this->addFlash(
+            'notice-neutral',
+            'History still in progress, very soon... 🚧'
+        );
+        return $this->redirectToRoute('home');
+    }
+
+
+    /**
      * @Route("/{cat_id}", name="_new")
      */
     public function newGame($cat_id, Request $request)
@@ -52,7 +92,7 @@ class GameController extends AbstractController
         $cookie = new Cookie("biggame_id", $biggame_id);
         $response->headers->setCookie($cookie);
         
-        $limit = 10;
+        $limit = 2; // A MODIFIER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
         $queue_questions = [];
         foreach ($questions as $key => $question) {
             array_push($queue_questions, $question->getId());
@@ -195,8 +235,8 @@ class GameController extends AbstractController
             if (empty($queue_questions)){
                 $response->headers->clearCookie('queue');
                 $response->send();
-                // TODO Template Finish
-                echo "FINISH";
+
+                return $this->redirectToRoute('game_end');
             }
             else {
                 return $this->redirectToRoute('game_quest', [
@@ -216,12 +256,5 @@ class GameController extends AbstractController
             'answers' => $answers
         ]);
     }
-
-    // /**
-    //  * @Route("/end", name="_end")
-    //  */
-    // public function end() {
-
-    // }
 
 }

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fin Quiz{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>End !</h1>
+    <br>
+    <h3>Results: {{ results ?? "--" }} / {{ limit ?? 10 }}</h3>
+    <br
+    {# {% for answer in answers %}
+      {% if answer.answer == true %}
+        <p class="text-success">✔️ {{i}}Question {{ answer.questionId }}: Correct !</p>
+        {% else %}
+        <p class="text-danger">❌ Question {{ answer.questionId }}: Wrong !</p>
+      {% endif %}
+    {% endfor %} #}
+
+    {% for i in 0..answers|length-1 %}
+      {% if answers[i].answer == true %}
+        <p class="text-success">✔️ {{i}} - Question {{ answers[i].questionId }}: Correct !</p>
+        {% else %}
+        <p class="text-danger">❌ {{i}} - Question {{ answers[i].questionId }}: Wrong !</p>
+      {% endif %}
+    {% endfor %}
+    <br>
+    <a class="btn btn-secondary disabled" type="button" href="{{url('game_history')}}" disabled>See History</a>
+    <a class="btn btn-primary float-right" type="button" href="{{url('home')}}">Back to Home</a>
+</div>
+{% endblock %}

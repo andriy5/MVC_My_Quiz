@@ -36,10 +36,11 @@ class HomeController extends AbstractController
             $response->send();
         }
         
-
         // Retrieve all categories
         $repository = $this->getDoctrine()->getRepository(Categorie::class);
         $categories = $repository->findAll();
+
+        
 
 
         return $this->render('home/index.html.twig', [
