@@ -24,7 +24,7 @@ class GameController extends AbstractController
     /**
      * @Route("/{cat_id}", name="_new")
      */
-    public function newGame($cat_id)
+    public function newGame($cat_id, Request $request)
     {
 
         // Retrieve categorie
@@ -32,24 +32,37 @@ class GameController extends AbstractController
         $categorie = $repository->findOneBy([
             'id' => $cat_id
         ]);
-
         // Retrieve questions
         $repository = $this->getDoctrine()->getRepository(Question::class);
         $questions = $repository->findBy([
             'idCategorie' => $cat_id
         ]);
 
+        // Set new biggame_id + cookie
+        $repository = $this->getDoctrine()
+        ->getRepository(Game::class);
+    
+        $query = $repository->createQueryBuilder('g')
+            ->orderBy('g.biggame_id', 'DESC')
+            ->getQuery();
+        
+        $biggame_id = $query->setMaxResults(1)->getOneOrNullResult();        
+        $biggame_id = $biggame_id->getBigGameId()+1;
+        $response = new Response();     
+        $cookie = new Cookie("biggame_id", $biggame_id);
+        $response->headers->setCookie($cookie);
+        
+        $limit = 10;
         $queue_questions = [];
         foreach ($questions as $key => $question) {
             array_push($queue_questions, $question->getId());
 
         }
         shuffle($queue_questions);
-        // dump($queue_questions);
-        // dd(json_encode($queue_questions));
-       
-        // Set cookie o the queue
-        $response = new Response();     
+        while (count($queue_questions) > $limit ){
+            array_shift($queue_questions);
+        }
+
         $cookie = new Cookie("queue", json_encode($queue_questions));
         $response->headers->setCookie($cookie);
         $response->send();
@@ -58,6 +71,8 @@ class GameController extends AbstractController
             'cat_id' => $cat_id,
             'quest_id' => $queue_questions[0]
         ]);
+
+        return $this->redirectToRoute('home');
     }
     
     /**
@@ -65,6 +80,25 @@ class GameController extends AbstractController
      */
     public function question($cat_id, $quest_id, Request $request)
     {
+        // Desactivate to answer two times to the same question
+        $repository = $this->getDoctrine()->getRepository(Game::class);
+        $dejavu = $repository->findOneBy([
+            'question_id' => $quest_id,
+            'biggame_id' => $request->cookies->get('biggame_id')
+        ]);
+        
+        $queue_questions = json_decode($request->cookies->get('queue'));
+
+        if ($dejavu) {
+            return $this->redirectToRoute('game_quest', [
+                'cat_id' => $cat_id,
+                'quest_id' => $queue_questions[0]
+            ]);
+        }
+
+
+
+
         // Retrieve categorie
         $repository = $this->getDoctrine()->getRepository(Categorie::class);
         $categorie = $repository->findOneBy([
@@ -135,6 +169,7 @@ class GameController extends AbstractController
                 'id' => $data['answer'],
             ]);
             $answer->setAnswer($answer_given->getReponseExpected());
+            $answer->setBiggameId($request->cookies->get('biggame_id'));
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -181,5 +216,12 @@ class GameController extends AbstractController
             'answers' => $answers
         ]);
     }
+
+    // /**
+    //  * @Route("/end", name="_end")
+    //  */
+    // public function end() {
+
+    // }
 
 }

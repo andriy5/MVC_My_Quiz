@@ -41,7 +41,6 @@ class HomeController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Categorie::class);
         $categories = $repository->findAll();
 
-        
 
         return $this->render('home/index.html.twig', [
             'categories' => $categories

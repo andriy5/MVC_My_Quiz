@@ -22,7 +22,7 @@ class Game
     private $user_id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="bigint", nullable=true)
      */
     private $temp_id;
 
@@ -35,6 +35,11 @@ class Game
      * @ORM\Column(type="boolean")
      */
     private $answer;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $biggame_id;
 
     public function getId(): ?int
     {
@@ -85,6 +90,18 @@ class Game
     public function setAnswer(bool $answer): self
     {
         $this->answer = $answer;
+
+        return $this;
+    }
+
+    public function getBiggameId(): ?int
+    {
+        return $this->biggame_id;
+    }
+
+    public function setBiggameId(int $biggame_id): self
+    {
+        $this->biggame_id = $biggame_id;
 
         return $this;
     }
