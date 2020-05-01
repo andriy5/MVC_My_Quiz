@@ -66,12 +66,6 @@ class GameController extends AbstractController
      */
     public function newGame($cat_id, Request $request)
     {
-
-        // Retrieve categorie
-        $repository = $this->getDoctrine()->getRepository(Categorie::class);
-        $categorie = $repository->findOneBy([
-            'id' => $cat_id
-        ]);
         // Retrieve questions
         $repository = $this->getDoctrine()->getRepository(Question::class);
         $questions = $repository->findBy([

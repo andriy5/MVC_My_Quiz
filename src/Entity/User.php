@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,6 +41,16 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $verified_at;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BigGame", mappedBy="user")
+     */
+    private $bigGames;
+
+    public function __construct()
+    {
+        $this->bigGames = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -133,6 +145,37 @@ class User implements UserInterface
     public function eraseVerifiedAt(): self
     {
         $this->verified_at = null;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BigGame[]
+     */
+    public function getBigGames(): Collection
+    {
+        return $this->bigGames;
+    }
+
+    public function addBigGame(BigGame $bigGame): self
+    {
+        if (!$this->bigGames->contains($bigGame)) {
+            $this->bigGames[] = $bigGame;
+            $bigGame->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBigGame(BigGame $bigGame): self
+    {
+        if ($this->bigGames->contains($bigGame)) {
+            $this->bigGames->removeElement($bigGame);
+            // set the owning side to null (unless already changed)
+            if ($bigGame->getUser() === $this) {
+                $bigGame->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -41,6 +41,12 @@ class Game
      */
     private $biggame_id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\BigGame", inversedBy="game")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $bigGame;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -102,6 +108,18 @@ class Game
     public function setBiggameId(int $biggame_id): self
     {
         $this->biggame_id = $biggame_id;
+
+        return $this;
+    }
+
+    public function getBigGame(): ?BigGame
+    {
+        return $this->bigGame;
+    }
+
+    public function setBigGame(?BigGame $bigGame): self
+    {
+        $this->bigGame = $bigGame;
 
         return $this;
     }
