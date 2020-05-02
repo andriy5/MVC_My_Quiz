@@ -38,7 +38,7 @@ class Game
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Question", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Question", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false, unique=false)
      */
     private $question;

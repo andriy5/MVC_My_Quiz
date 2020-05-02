@@ -41,6 +41,7 @@ class Categorie
     public function __construct()
     {
         $this->question = new ArrayCollection();
+        $this->biggame = new ArrayCollection();
     }
 
     public function getId(): ?int

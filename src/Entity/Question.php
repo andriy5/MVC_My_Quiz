@@ -31,7 +31,7 @@ class Question
     private $question;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Categorie", inversedBy="question")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Categorie", inversedBy="question", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $categorie;

@@ -26,7 +26,7 @@ class BigGame
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="bigGame")
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="bigGame", fetch="EAGER")
      */
     private $game;
 
@@ -116,5 +116,4 @@ class BigGame
 
         return $this;
     }
-
 }

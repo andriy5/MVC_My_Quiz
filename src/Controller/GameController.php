@@ -25,8 +25,9 @@ class GameController extends AbstractController
     /**
      * @Route("/end", name="_end")
      */
-    public function end(Request $request) {
+    public function end( Request $request) {
         $biggame_id = $request->cookies->get('biggame_id');
+        // dd($request);
         if ($biggame_id) {
             $repository = $this->getDoctrine()->getRepository(Game::class);
             $goodanswers = $repository->findBy([
@@ -50,6 +51,7 @@ class GameController extends AbstractController
                 $biggame->setTempId($request->cookies->get('temp_id'));
             }
             $biggame->setResults($results);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($biggame);
             $entityManager->flush();
@@ -70,11 +72,29 @@ class GameController extends AbstractController
      */
     public function history(Request $request)
     {
-        $this->addFlash(
-            'notice-neutral',
-            'History still in progress, very soon... 🚧'
-        );
-        return $this->redirectToRoute('home');
+        $repository = $this->getDoctrine()->getRepository(BigGame::class);
+        if ($this->getUser()) {
+            $games = $repository->findBy([
+                'user' => $this->getUser()->getId(),
+            ]);
+        }
+        else {
+            $games = $repository->findBy([
+                'temp_id' => $request->cookies->get('temp_id')
+            ]);
+        }
+        
+        $categories = [];
+        foreach ($games as $key => $game) {
+            array_push($categories, $game->getGame()[0]->getQuestion()->getCategorie()->getName());
+        }
+        // dd($categories);
+        
+
+        return $this->render('game/history.html.twig', [
+            'games' => $games,
+            'names' => $categories
+        ]);
     }
 
     /**
