@@ -21,11 +21,12 @@
       {% endif %}
     {% endfor %} #}
 
-    {% for i in 0..answers|length-1 %}
+    {% for i in 0..answers|length -1 %}
+      <span></span>
       {% if answers[i].answer == true %}
-        <p class="text-success">✔️ {{i}} - Question {{ answers[i].questionId }}: Correct !</p>
+        <p class="text-success">✔️ {{i}} - Question {{ answers[i].id }}: Correct !</p>
         {% else %}
-        <p class="text-danger">❌ {{i}} - Question {{ answers[i].questionId }}: Wrong !</p>
+        <p class="text-danger">❌ {{i}} - Question {{ answers[i].id }}: Wrong !</p>
       {% endif %}
     {% endfor %}
     <br>

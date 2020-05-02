@@ -21,6 +21,7 @@ class BigGame
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="bigGames")
      * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $user;
 
@@ -28,6 +29,16 @@ class BigGame
      * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="bigGame")
      */
     private $game;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $results;
+
+    /**
+     * @ORM\Column(type="bigint", nullable=true)
+     */
+    private $temp_id;
 
     public function __construct()
     {
@@ -46,7 +57,7 @@ class BigGame
 
     public function setUser(?user $user): self
     {
-        $this->user = $user;
+        $this->user = $user->getId();
 
         return $this;
     }
@@ -81,4 +92,29 @@ class BigGame
 
         return $this;
     }
+
+    public function getResults(): ?int
+    {
+        return $this->results;
+    }
+
+    public function setResults(?int $results): self
+    {
+        $this->results = $results;
+
+        return $this;
+    }
+
+    public function getTempId(): ?string
+    {
+        return $this->temp_id;
+    }
+
+    public function setTempId(?string $temp_id): self
+    {
+        $this->temp_id = $temp_id;
+
+        return $this;
+    }
+
 }

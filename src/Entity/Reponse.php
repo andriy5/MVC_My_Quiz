@@ -22,13 +22,6 @@ class Reponse
     private $id;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="id_question", type="integer", nullable=true)
-     */
-    private $idQuestion;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(name="reponse", type="string", length=255, nullable=true)
@@ -43,7 +36,7 @@ class Reponse
     private $reponseExpected;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Question", inversedBy="Reponse")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Question", inversedBy="reponse")
      * @ORM\JoinColumn(nullable=false)
      */
     private $question;
@@ -51,18 +44,6 @@ class Reponse
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdQuestion(): ?int
-    {
-        return $this->idQuestion;
-    }
-
-    public function setIdQuestion(?int $idQuestion): self
-    {
-        $this->idQuestion = $idQuestion;
-
-        return $this;
     }
 
     public function getReponse(): ?string
