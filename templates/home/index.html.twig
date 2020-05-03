@@ -3,11 +3,22 @@
 {% block title %}Home | My Quiz{% endblock %}
 
 {% block body %}
-    <h1>Categories</h1>
-    <ul>
+    <h1 style="font-family: 'Cookie', cursive; font-size: 50px">Play</h1>
+    <h3 class="text-secondary">Categories</h3>
+    <ul class="list-inline">
+        <li><a class="text-danger list-inline-item" href="/game/0">🎲 Random</a></li>
     {% for category in categories %}
-        <li><a class="text-dark" href="/game/{{category.id}}">{{category.name}}</a></li>
+        <li><a class="text-dark list-inline-item" href="/game/{{category.id}}">{{category.name}}</a></li>
     {% endfor %}
     </ul>
+    {% if app.user %}
+        <h1 style="font-family: 'Cookie', cursive; font-size: 50px">Create</h1>
+        <ul class="list-inline">
+            <li><a class="btn btn-outline-primary btn-sm list-inline-item mb-2" href="/question/0/new" >+ New Category</a></li>
+        {% for category in categories_create %}
+            <li><a class="text-dark list-inline-item" href="/question/{{category.id}}/new">{{category.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock %}

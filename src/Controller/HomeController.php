@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Categorie;
+use App\Entity\Question;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 // use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
@@ -40,11 +41,19 @@ class HomeController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Categorie::class);
         $categories = $repository->findAll();
 
-        
 
+        // Check that there is minimum 10 questions
+        $categories_ready = [];
+        foreach ($categories as $key => $category) {
+            if (count($category->getQuestion()) >= 10 ) {
+                array_push($categories_ready, $category);
+            }
+        }
+    
 
         return $this->render('home/index.html.twig', [
-            'categories' => $categories
+            'categories' => $categories_ready,
+            'categories_create' => $categories
         ]);
     }
 }

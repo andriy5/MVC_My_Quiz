@@ -251,6 +251,9 @@ class GameController extends AbstractController
      */
     public function newGame($cat_id, Request $request)
     {
+        //
+
+
         // Retrieve questions
         $repository = $this->getDoctrine()->getRepository(Question::class);
         $questions = $repository->findBy([
@@ -277,7 +280,7 @@ class GameController extends AbstractController
         $response->headers->setCookie($cookie);
         // dd($biggame_id);
         
-        $limit = 2; // A MODIFIER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+        $limit = 10;
         $queue_questions = [];
         foreach ($questions as $key => $question) {
             array_push($queue_questions, $question->getId());

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Question{% endblock %}
+
+{% block body %}
+    <p class="text-secondary">{{ name.name }}</p>
+    <h1>{{ question.question }}</h1>
+    <br>
+    <ul>
+      {% for reponse in reponses %}
+        <li>{{ reponse.reponse }}
+          {% if reponse.reponseExpected == true %}
+            &ensp;(✔️)
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <br>
+    <a class="btn btn-primary" type="button" href="{{ path('question_new', {"cat_id": cat_id}) }}">Create Question</a>
+    <a class="btn btn-secondary float-right" type="button" href="{{url('home')}}">Back to Home</a>
+
+
+    {% for message in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+{% endblock %}

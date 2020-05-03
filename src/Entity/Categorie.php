@@ -34,7 +34,7 @@ class Categorie
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="categorie")
+     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="categorie", fetch="EAGER")
      */
     private $question;
 
