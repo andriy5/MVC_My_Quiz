@@ -251,7 +251,24 @@ class GameController extends AbstractController
      */
     public function newGame($cat_id, Request $request)
     {
-        //
+        // Random feature
+        if ($cat_id == 0) {
+            
+            $repository = $this->getDoctrine()->getRepository(Categorie::class);
+            $categories = $repository->findAll();
+
+            $categories_ready = [];
+            foreach ($categories as $key => $category) {
+                if (count($category->getQuestion()) >= 10 ) {
+                    array_push($categories_ready, $category->getId());
+                }
+            }
+            $nbr = array_rand ($categories_ready);
+
+            return $this->redirectToRoute('game_new', [
+                'cat_id' => $nbr
+            ]);
+        }
 
 
         // Retrieve questions
