@@ -4,4 +4,4 @@ easy_admin:
        - App\Entity\Question
        - App\Entity\Categorie
        - App\Entity\Reponse
-       - App\Entity\User
+      #  - App\Entity\User
