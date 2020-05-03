@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 
 
 /**
@@ -35,7 +37,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/edit", name="profile_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, MailerInterface $mailer): Response
+    public function edit(Request $request, MailerInterface $mailer, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = $this->getUser();
         $currentMail = $user->getEMail();
@@ -47,10 +49,20 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Compare the new and the old email
             // $data = $form->getData();
+            // dd($data);
             // $data = $request->request->get('email');
+
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
 
             $this->getDoctrine()->getManager()->flush();
             $newMail = $user->getEMail();
+
+            
 
             
             if ($currentMail != $newMail) {

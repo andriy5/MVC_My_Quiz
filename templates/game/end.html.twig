@@ -24,9 +24,9 @@
     {% for i in 0..answers|length -1 %}
       <span></span>
       {% if answers[i].answer == true %}
-        <p class="text-success">✔️ {{i}} - Question {{ answers[i].id }}: Correct !</p>
+        <p class="text-success">✔️ {{i}} - {{ answers[i].question }}: Correct !</p>
         {% else %}
-        <p class="text-danger">❌ {{i}} - Question {{ answers[i].id }}: Wrong !</p>
+        <p class="text-danger">❌ {{i}} - {{ answers[i].question }}: Wrong !</p>
       {% endif %}
     {% endfor %}
     <br>

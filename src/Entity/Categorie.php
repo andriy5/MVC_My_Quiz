@@ -29,12 +29,12 @@ class Categorie
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
-     * @Assert\Unique
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="categorie", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Question", mappedBy="categorie", fetch="EAGER", cascade="remove")
      */
     private $question;
 
@@ -92,5 +92,9 @@ class Categorie
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
 
 }

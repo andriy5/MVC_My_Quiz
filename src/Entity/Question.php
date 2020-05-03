@@ -31,8 +31,8 @@ class Question
     private $question;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Categorie", inversedBy="question", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Categorie", inversedBy="question", fetch="EAGER", cascade="remove")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $categorie;
 
@@ -107,5 +107,8 @@ class Question
         return $this;
     }
 
-
+    public function __toString()
+    {
+        return $this->question;
+    }
 }

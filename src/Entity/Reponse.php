@@ -82,5 +82,9 @@ class Reponse
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->reponse;
+    }
 
 }

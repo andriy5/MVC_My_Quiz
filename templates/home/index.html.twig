@@ -3,16 +3,15 @@
 {% block title %}Home | My Quiz{% endblock %}
 
 {% block body %}
-    <h1 style="font-family: 'Cookie', cursive; font-size: 50px">Play</h1>
-    <h3 class="text-secondary">Categories</h3>
+    <h1 style="font-family: 'Cookie', cursive; font-size: 50px">&ensp;Play</h1>
     <ul class="list-inline">
-        <li><a class="text-danger list-inline-item" href="/game/0">🎲 Random</a></li>
+        <li><a class="btn btn-outline-danger btn-sm list-inline-item mb-2" href="/game/0">🎲 Surprise Me !</a></li>
     {% for category in categories %}
         <li><a class="text-dark list-inline-item" href="/game/{{category.id}}">{{category.name}}</a></li>
     {% endfor %}
     </ul>
     {% if app.user %}
-        <h1 style="font-family: 'Cookie', cursive; font-size: 50px">Create</h1>
+        <h1 style="font-family: 'Cookie', cursive; font-size: 50px">&ensp;Create</h1>
         <ul class="list-inline">
             <li><a class="btn btn-outline-primary btn-sm list-inline-item mb-2" href="/question/0/new" >+ New Category</a></li>
         {% for category in categories_create %}
